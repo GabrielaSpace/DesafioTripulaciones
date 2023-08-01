@@ -22,12 +22,12 @@ steps:
         --platform=managed \
         --allow-unauthenticated \
         --port=5173 \
-        --update-env-vars PG_USER=$$PG_USER"
+        --update-env-vars VITE_SERVER_PROXY=$$VITE_SERVER_PROXY"
     ]
     secretEnv: [
-      'PG_USER'
+      'VITE_SERVER_PROXY'
     ]
 availableSecrets:
   secretManager:
-    - versionName: projects/795308822384/secrets/PG_USER/versions/latest
-      env: PG_USER
+    - versionName: projects/795308822384/secrets/VITE_SERVER_PROXY/versions/latest
+      env: VITE_SERVER_PROXY
