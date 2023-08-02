@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sexo from "../Form/Sexo/Sexo";
 import Edad from "../Form/Edad/Edad";
 import Altura from "../Form/Altura/Altura";
@@ -8,19 +8,58 @@ import Enfermedad from "../Form/Enfermedad/Enfermedad";
 import Actividad from "../Form/Actividad/Actividad";
 import Confirmation from "../Form/Confirmation/Confirmation";
 import FooterForm from "./FooterForm/FooterForm";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const Form = () => {
+
+  const [userLogged, setUserLogged] = useState(null);
+  const [username, setUserName] = useState('');
+
+  // Getting user_id from cookie and 
+  useEffect(() => {
+
+    const getUserIdAndUserName = async ()=> {
+      const user_id = Cookies.get("user-logged");
+      setUserLogged(user_id);
+
+      try {
+        const response = await axios.get(
+          `/api/users?user_id=${parseInt(user_id)}`
+        );
+        const user = await response.data;
+        setUserName(user[0].username)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getUserIdAndUserName()
+  }, []);
+
+  // console.log(userLogged);
+
   //Logica de cambio de formulario
   const [page, setPage] = useState(0);
   const FormTitles = [
-    "Especifica tu Sexo",
-    "Especifica tu Edad",
-    "Especifica tu Altura",
-    "Especifica tu Peso",
+    "Especifica tu sexo",
+    "Especifica tu edad",
+    "Especifica tu altura",
+    "Especifica tu peso",
     "¿Te hidratas?",
     "¿Qué tipo de enfermedad tienes?",
-    "¿Realizas Actividad Física?",
-    "Bienvenido",
+    "¿Realizas actividad física?",
+    `Bienvenido ${username}`,
+  ];
+  const FormSubtitles = [
+    "Tus hormonas pueden afectar al cálculo",
+    "La edad es importante a la hora de medir la vulnerabilidad",
+    "El peso influye en tu capacidad de regular la temperatura corporal",
+    "La altura influye en el calor corporal",
+    "Añade la cantidad aproximada de vasos de agua que bebes al día",
+    "En el caso de no tener ninguna de estas pasa a la siguiente",
+    "La actividad física influye en la temperatura corporal",
+    "Revisa que tus datos son los correctos",
   ];
   const PageDisplay = () => {
     if (page === 0) {
@@ -79,20 +118,20 @@ const Form = () => {
   };
 
   //States Edad:
-  const [edad, setEdad] = useState("");
+  const [edad, setEdad] = useState('');
   const handleEdadChange = (number) => {
     setEdad((prevNumber) => prevNumber + number);
   };
   const handleClearAge = () => {
-    setEdad("");
+    setEdad('');
   };
   //States Altura:
-  const [displayedNumberHeight, setDisplayedNumberHeight] = useState("");
+  const [displayedNumberHeight, setDisplayedNumberHeight] = useState('');
   const handleButtonClickHeight = (number) => {
     setDisplayedNumberHeight((prevNumber) => prevNumber + number);
   };
   const handleClearHeight = () => {
-    setDisplayedNumberHeight("");
+    setDisplayedNumberHeight('');
   };
   //States Sexo:
   const [genero, setGenero] = useState("");
@@ -100,12 +139,12 @@ const Form = () => {
     setGenero(generoSeleccionado);
   };
   //States Peso:
-  const [peso, setPeso] = useState("");
+  const [peso, setPeso] = useState('');
   const handlePesoChange = (number) => {
     setPeso((prevNumber) => prevNumber + number);
   };
   const handleClearWeight = () => {
-    setPeso("");
+    setPeso('');
   };
   //States Agua:
   const [cantidadAgua, setCantidadAgua] = useState(0);
@@ -137,14 +176,14 @@ const Form = () => {
   };
 
   //States Actividad:
-  const [actividad, setActividad] = useState("opcion1");
+  const [actividad, setActividad] = useState("");
 
   const handleActividadChange = (event) => {
     setActividad(event.target.value);
   };
   //Objeto Data
   const dataForm = {
-    user_id: 5,
+    user_id: userLogged,
     sex: genero,
     age: edad,
     height: displayedNumberHeight,
@@ -156,19 +195,19 @@ const Form = () => {
     neuro_dis: neuro,
     lung_dis: lung,
   };
-  console.log(dataForm);
+  // console.log(dataForm);
 
+  
   return (
     <>
       <section className="header_form-section">
         <h1>{FormTitles[page]}</h1>
+        <h2>{FormSubtitles[page]}</h2>
       </section>
 
-      <section className="body-form-section">
-        {PageDisplay()}
-      </section>
+      <section className="body-form-section">{PageDisplay()}</section>
 
-      <FooterForm page={page} setPage={setPage}/>
+      <FooterForm page={page} setPage={setPage} dataForm={dataForm} userLogged={userLogged} />
     </>
   );
 };

@@ -9,7 +9,6 @@ const LoginForm = () => {
   const [message, setMessage] = useState("");
   // const [emailState, setEmailState] = useState("");
   // const [passwordState, setpasswordState] = useState("");
-  const { updateUserLogged } = useContext(UserLoggedContext);
 
   const {
     register,
@@ -28,21 +27,18 @@ const LoginForm = () => {
         const resData = await res.json();
         console.log(resData);
         setMessage(resData.message);
-        const user = {
-          user_id: resData.user_id,
-          username: resData.username,
-          email: resData.email
-        }
-        updateUserLogged(user);
+
+          
       } catch (error) {
         console.log(error);
         setMessage(error);
       }
     };
     handleLogin();
+
     setTimeout(() => {
-      navigate('/home');
-    }, 1000);
+      navigate('/form');
+    }, 500);
   };
   // console.log(errors);
 

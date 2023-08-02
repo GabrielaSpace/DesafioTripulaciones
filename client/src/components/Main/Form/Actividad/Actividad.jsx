@@ -1,54 +1,62 @@
 import React, { useState } from "react";
 
-const Actividad = ({handleActividadChange, actividad}) => {
- 
-
+const Actividad = ({ handleActividadChange, actividad }) => {
+  
   return (
-    <div>
-      <form>
-        <h3>Actividad: {actividad}</h3>
-        <button onClick={() => handleActividadChange('1')}>1</button>
-        <input
-          type="radio"
-          id="opcion1"
-          name="actividad"
-          value="opcion1"
-          checked={actividad === "opcion1"}
-          onChange={handleActividadChange}
-        />
-        <label htmlFor="opcion1">Opción 1</label>
+    <>
+      {/* <button onClick={() => handleActividadChange("1")}>1</button> */}
+      <input
+        className={`activity-input`}
+        type="radio"
+        id="opcion1"
+        name="actividad"
+        value="Solo salgo a pasear"
+        checked={actividad === "Solo salgo a pasear"}
+        onChange={handleActividadChange}
+      />
+      <label className={`activity-label`} htmlFor="opcion1">
+        Solo salgo a pasear
+      </label>
 
-        <input
-          type="radio"
-          id="opcion2"
-          name="actividad"
-          value="opcion2"
-          checked={actividad === "opcion2"}
-          onChange={handleActividadChange}
-        />
-        <label htmlFor="opcion2">Opción 2</label>
+      <input
+        className={`activity-input`}
+        type="radio"
+        id="opcion2"
+        name="actividad"
+        value="Cada ciertas horas"
+        checked={actividad === "Cada ciertas horas"}
+        onChange={handleActividadChange}
+      />
+      <label className={`activity-label`} htmlFor="opcion2">
+        Cada ciertas horas
+      </label>
 
-        <input
-          type="radio"
-          id="opcion3"
-          name="actividad"
-          value="opcion3"
-          checked={actividad === "opcion3"}
-          onChange={handleActividadChange}
-        />
-        <label htmlFor="opcion3">Opción 3</label>
+      <input
+        className={`activity-input`}
+        type="radio"
+        id="opcion3"
+        name="actividad"
+        value="Con frecuencia"
+        checked={actividad === "Con frecuencia"}
+        onChange={handleActividadChange}
+      />
+      <label className={`activity-label`} htmlFor="opcion3">
+        Con frecuencia
+      </label>
 
-        <input
-          type="radio"
-          id="opcion4"
-          name="actividad"
-          value="opcion4"
-          checked={actividad === "opcion4"}
-          onChange={handleActividadChange}
-        />
-        <label htmlFor="opcion4">Opción 4</label>
-      </form>
-    </div>
+      <input
+        className={`activity-input`}
+        type="radio"
+        id="opcion4"
+        name="actividad"
+        value="Muy a menudo"
+        checked={actividad === "Muy a menudo"}
+        onChange={handleActividadChange}
+      />
+      <label className={`activity-label`} htmlFor="opcion4">
+        Muy a menudo
+      </label>
+    </>
   );
 };
 

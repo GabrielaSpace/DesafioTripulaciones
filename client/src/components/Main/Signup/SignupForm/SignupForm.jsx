@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -38,6 +38,12 @@ const SignupForm = () => {
         const resData = await res.json();
         console.log(resData);
         setMessage(resData.message);
+        const user = {
+          user_id: resData.user_id,
+          username: resData.username,
+          email: resData.email
+        }
+        updateUserLogged(user);
       } catch (error) {
         console.log(error);
       }
@@ -63,7 +69,7 @@ const SignupForm = () => {
       handleSignup();
 
       setTimeout(() => {
-        navigate('/home');
+        navigate('/form');
       }, 500);
 
     } else {
