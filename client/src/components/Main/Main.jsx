@@ -5,16 +5,18 @@ import Home from "./Home/Home";
 import Signup from "./Signup/Signup";
 import Perfil from "./Perfil/Perfil";
 import Diagnostic from "./Diagnostic/Diagnostic";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { UserLoggedContext } from "../../context/userLoggedContext";
 
 const Main = () => {
-  
-  const [userLogged, setUserLogged] = useState(null);
+  const { userLogged, updateUserLogged } = useContext(UserLoggedContext);
 
   useEffect(() => {
     const user_id = Cookies.get("user-logged");
-    setUserLogged(user_id);
+    if (user_id) {
+      updateUserLogged(true);
+    }
   }, []);
 
   return (
@@ -34,7 +36,6 @@ const Main = () => {
             <>
               <Route path="/" element={<Login />}></Route>
               <Route path="/signup" element={<Signup />}></Route>
-              <Route path="/form" element={<Form />}></Route>
             </>
           )}
         </Routes>

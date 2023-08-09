@@ -12,32 +12,32 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 const Form = () => {
+  const [userIdLogged, setUserIdLogged] = useState(null);
+  const [username, setUserName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const [userLogged, setUserLogged] = useState(null);
-  const [username, setUserName] = useState('');
-
-  // Getting user_id from cookie and 
+  // Getting user_id from cookie and
   useEffect(() => {
-
-    const getUserIdAndUserName = async ()=> {
+    const getUserIdAndUserName = async () => {
       const user_id = Cookies.get("user-logged");
-      setUserLogged(user_id);
+      setUserIdLogged(user_id);
 
       try {
         const response = await axios.get(
           `/api/users?user_id=${parseInt(user_id)}`
         );
         const user = await response.data;
-        setUserName(user[0].username)
+        setUserName(user[0].username);
       } catch (error) {
+        // setErrorMessage(
+        //   "Ha habido un error, inténtelo de nuevo pasado unos minutos"
+        // );
         console.log(error);
       }
-    }
+    };
 
-    getUserIdAndUserName()
+    getUserIdAndUserName();
   }, []);
-
-  // console.log(userLogged);
 
   //Logica de cambio de formulario
   const [page, setPage] = useState(0);
@@ -49,8 +49,9 @@ const Form = () => {
     "¿Te hidratas?",
     "¿Qué tipo de enfermedad tienes?",
     "¿Realizas actividad física?",
-    `Bienvenido ${username}`,
+    `¡Bienvenido ${username}!`,
   ];
+  //Titulos de las vistas
   const FormSubtitles = [
     "Tus hormonas pueden afectar al cálculo",
     "La edad es importante a la hora de medir la vulnerabilidad",
@@ -61,6 +62,7 @@ const Form = () => {
     "La actividad física influye en la temperatura corporal",
     "Revisa que tus datos son los correctos",
   ];
+  //Logica de cambio de vista
   const PageDisplay = () => {
     if (page === 0) {
       return <Sexo handleGeneroChange={handleGeneroChange} genero={genero} />;
@@ -118,20 +120,20 @@ const Form = () => {
   };
 
   //States Edad:
-  const [edad, setEdad] = useState('');
+  const [edad, setEdad] = useState("");
   const handleEdadChange = (number) => {
     setEdad((prevNumber) => prevNumber + number);
   };
   const handleClearAge = () => {
-    setEdad('');
+    setEdad("");
   };
   //States Altura:
-  const [displayedNumberHeight, setDisplayedNumberHeight] = useState('');
+  const [displayedNumberHeight, setDisplayedNumberHeight] = useState("");
   const handleButtonClickHeight = (number) => {
     setDisplayedNumberHeight((prevNumber) => prevNumber + number);
   };
   const handleClearHeight = () => {
-    setDisplayedNumberHeight('');
+    setDisplayedNumberHeight("");
   };
   //States Sexo:
   const [genero, setGenero] = useState("");
@@ -139,12 +141,12 @@ const Form = () => {
     setGenero(generoSeleccionado);
   };
   //States Peso:
-  const [peso, setPeso] = useState('');
+  const [peso, setPeso] = useState("");
   const handlePesoChange = (number) => {
     setPeso((prevNumber) => prevNumber + number);
   };
   const handleClearWeight = () => {
-    setPeso('');
+    setPeso("");
   };
   //States Agua:
   const [cantidadAgua, setCantidadAgua] = useState(0);
@@ -183,7 +185,7 @@ const Form = () => {
   };
   //Objeto Data
   const dataForm = {
-    user_id: userLogged,
+    user_id: userIdLogged,
     sex: genero,
     age: edad,
     height: displayedNumberHeight,
@@ -197,17 +199,34 @@ const Form = () => {
   };
   // console.log(dataForm);
 
-  
+  const [headerClassName, setHeaderClassName] = useState("header_form-section");
+
+  useEffect(() => {
+    if (page === 7) {
+      setHeaderClassName("header_form-section-confirmation");
+    } else {
+      setHeaderClassName("header_form-section");
+    }
+  }, [page]);
+
   return (
     <>
-      <section className="header_form-section">
+      <section className={headerClassName}>
         <h1>{FormTitles[page]}</h1>
         <h2>{FormSubtitles[page]}</h2>
       </section>
 
       <section className="body-form-section">{PageDisplay()}</section>
 
-      <FooterForm page={page} setPage={setPage} dataForm={dataForm} userLogged={userLogged} />
+      {/* {errorMessage && <h2>{errorMessage}</h2>} */}
+
+      <FooterForm
+        page={page}
+        setPage={setPage}
+        dataForm={dataForm}
+        userLogged={userIdLogged}
+        setErrorMessage={setErrorMessage}
+      />
     </>
   );
 };

@@ -3,11 +3,15 @@
 
 
 .diagnostic-section {
-    // @include flex-column;
-    min-height: 100vh;
+    overflow: auto;
     line-height: 200%;
     text-align: left;
     color: $turquoise-blue;
+    padding-bottom: 4rem;
+}
+
+.diagnostic-header-article {
+    width: 100%;
 }
 
 .diagnostic-header-article div {
@@ -28,6 +32,12 @@
     padding: 0 2rem;
 }
 
+.diagnostic-response-article span {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
 .diagnostic-navbar-div {
-    @include flex-row
+    @include flex-row;
+    height: 100px;
 }

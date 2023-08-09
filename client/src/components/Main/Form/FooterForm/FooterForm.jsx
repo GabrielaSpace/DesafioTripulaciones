@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LeftArrow from "../../../../assets/icons/Flecha-Izquierda-Activado.svg";
 import LeftArrow2 from "../../../../assets/icons/Flecha-Izquierda-Presionado.svg";
@@ -7,7 +8,8 @@ import RightArrow2 from "../../../../assets/icons/Flecha-Derecha-Presionado.svg"
 import DisableArrow from "../../../../assets/icons/Flecha-Izquierda-Desactivado.svg";
 import ConfirmationButton from "../../../../assets/icons/Botón-Confirmación.svg";
 
-const FooterForm = ({ page, setPage, dataForm }) => {
+const FooterForm = ({ page, setPage, dataForm, setErrorMessage }) => {
+  const navigate = useNavigate();
   const [log, setLog] = useState([]);
   const [Hovered, setHovered] = useState(false); //Boton1
   const [Hovered2, setHovered2] = useState(false); //Boton2
@@ -26,55 +28,47 @@ const FooterForm = ({ page, setPage, dataForm }) => {
   const handleMouseLeave2 = () => {
     setHovered2(false);
   };
+//Comprobacion de formulario existente
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `/api/dataform?user_id=${dataForm.user_id}`
+      );
+      const data = await response.data;
 
+      setLog(data);
 
-    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `/api/dataform?user_id=${dataForm.user_id}`
-        );
-        const data = await response.data;
-
-
-        setLog(data);
-        console.log("Buscando usuario");
-        console.log(log);
-        console.log("data en Fetchdata");
-        console.log(data);
-
-        try {
-          if (data.length > 0) {
-            const response = await axios.put(
-              "/api/dataform",
-              dataForm
-            );
-            console.log("Respuesta del servidor:", response.data);
-          } else {
-            const response = await axios.post(
-              "/api/dataform",
-              dataForm
-            );
-            console.log("Respuesta del servidor:", response.data);
-          }
-        } catch (error) {
-          console.log("Error al enviar los datos:", error);
+        if (data.length > 0) {
+          const response = await axios.put("/api/dataform", dataForm);
+        } else {
+          const response = await axios.post("/api/dataform", dataForm);
         }
-
+        setTimeout(() => {
+          navigate("/home");
+        }, 500);
       } catch (error) {
-        console.log("Error:", error);
+        setErrorMessage(
+          "Ha habido un error, inténtelo de nuevo pasado unos minutos"
+        );
+        console.log("Error al enviar los datos:", error);
       }
-    };
+    } catch (error) {
+      setErrorMessage(
+        "Ha habido un error, inténtelo de nuevo pasado unos minutos"
+      );
+      console.log("Error:", error);
+    }
+  };
 
   const handleSubmitClick = async () => {
     if (Object.values(dataForm).some((value) => value === "")) {
       alert("Todos los campos deben ser completados");
       return;
     }
-    await fetchData()
-
-
+    await fetchData();
   };
-
+//Botonera del nav-bar
   return (
     <section className="footer-form-section">
       <article className="progressbar">
